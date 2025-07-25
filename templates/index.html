@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Blur AI</title>
+    <style>
+        /* Import a modern font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        /* Define color variables and basic styles */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* The main card container */
+        .card {
+            background-color: var(--card-background);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        p {
+            color: #6c757d;
+            font-weight: 300;
+        }
+
+        /* --- Form Styling --- */
+        .upload-form {
+            margin-top: 30px;
+        }
+        
+        /* Hide the default file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Style the label to look like a button */
+        .file-upload-label {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-block;
+            font-weight: 400;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .file-upload-label:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        #filename-display {
+            margin-top: 15px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        /* --- Result & Animation --- */
+        .result {
+            margin-top: 30px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .result img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Loading Spinner --- */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Hidden by default */
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 600px) {
+            .card {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Face Blur AI 🤖</h1>
+        <p>Upload an image to automatically blur any detected faces.</p>
+
+        <form id="blur-form" method="post" enctype="multipart/form-data" class="upload-form">
+            <label for="file-upload" class="file-upload-label">
+                Choose Image
+            </label>
+            <input id="file-upload" type="file" name="file" accept="image/png, image/jpeg" onchange="displayFilename(this)">
+            
+            <div id="filename-display">No file chosen</div>
+            
+            <div id="loader" class="loader"></div>
+            <button id="submit-button" type="submit" style="display:none; margin-top:20px;">Blur Image</button>
+        </form>
+
+        {% if blurred_image %}
+        <div class="result">
+            <h2>Result ✨</h2>
+            <img src="{{ url_for('static', filename='results/' + blurred_image) }}" alt="Blurred Image">
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const form = document.getElementById('blur-form');
+        const fileInput = document.getElementById('file-upload');
+        const filenameDisplay = document.getElementById('filename-display');
+        const submitButton = document.getElementById('submit-button');
+        const loader = document.getElementById('loader');
+
+        // Function to display the name of the chosen file
+        function displayFilename(input) {
+            if (input.files && input.files.length > 0) {
+                filenameDisplay.textContent = input.files[0].name;
+                submitButton.style.display = 'inline-block'; // Show the submit button
+            } else {
+                filenameDisplay.textContent = 'No file chosen';
+                submitButton.style.display = 'none'; // Hide if no file
+            }
+        }
+
+        // Show loader when the form is submitted
+        form.addEventListener('submit', function() {
+            // Check if a file is actually selected before showing loader
+            if (fileInput.files.length > 0) {
+                submitButton.style.display = 'none'; // Hide the button
+                loader.style.display = 'block'; // Show the loader
+            }
+        });
+    </script>
+
+</body>
+</html>
