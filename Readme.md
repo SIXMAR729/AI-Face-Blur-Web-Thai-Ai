@@ -21,11 +21,11 @@ API: AI for Thai - Face Blur
 🚀 Getting Started Follow these instructions to get the project running on your local machine.
 
 Clone the Repository First, clone the repository to your local machine.
-Bash
+'''Bash'''
 
 git clone https://github.com/your-username/your-repository-name.git cd your-repository-name 2. Install Dependencies It is highly recommended to use a virtual environment.
 
-Bash
+'''Bash'''
 
 Create and activate a virtual environment
 python -m venv venv source venv/bin/activate # On Windows, use: venv\Scripts\activate
